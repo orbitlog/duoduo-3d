@@ -25,15 +25,13 @@ function StarParticles() {
     return new THREE.ShapeGeometry(shape)
   }, [])
 
-  // 2. 核心状态：坐标与“允许产生”的开关
+  // 2. 核心状态：坐标与移动检测
   const mouseWorldPos = useRef(new THREE.Vector3())
-  const canSpawn = useRef(false) // 初始设为 false，不懂就不产生
+  const prevMouseWorldPos = useRef(new THREE.Vector3())
+  const hasMouseMoved = useRef(false)
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      // 只有触发了移动，才打开开关
-      if (!canSpawn.current) canSpawn.current = true
-
       const nx = (event.clientX / window.innerWidth) * 2 - 1
       const ny = -(event.clientY / window.innerHeight) * 2 + 1
       
@@ -41,7 +39,14 @@ function StarParticles() {
       vec.unproject(camera)
       const dir = vec.sub(camera.position).normalize()
       const distance = -camera.position.z / dir.z
-      mouseWorldPos.current.copy(camera.position).add(dir.multiplyScalar(distance))
+      const newPos = new THREE.Vector3().copy(camera.position).add(dir.multiplyScalar(distance))
+      
+      // 检测位置是否真的变化了（避免微小抖动）
+      if (newPos.distanceTo(mouseWorldPos.current) > 0.01) {
+        prevMouseWorldPos.current.copy(mouseWorldPos.current)
+        mouseWorldPos.current.copy(newPos)
+        hasMouseMoved.current = true
+      }
     }
 
     window.addEventListener('mousemove', handleMouseMove)
@@ -62,9 +67,9 @@ function StarParticles() {
   useFrame((_, delta) => {
     const startTime = performance.now()
 
-    // --- 核心改动：没动过鼠标，这里 spawned 永远是 0 ---
+    // --- 只在鼠标真正移动时生成星星 ---
     let spawned = 0
-    if (canSpawn.current) {
+    if (hasMouseMoved.current) {
       for (let i = 0; i < count && spawned < 2; i++) {
         const p = particles[i]
         if (!p.active) {
@@ -75,8 +80,7 @@ function StarParticles() {
           spawned++
         }
       }
-      // 如果你希望鼠标“停下来”就不发，可以在这里把 canSpawn 关掉
-      // 但通常尾迹是随动发射，只要动过一次就开始监听
+      hasMouseMoved.current = false // 用完后重置，等待下次移动
     }
 
     let activeCount = 0

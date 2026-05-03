@@ -81,21 +81,42 @@ export default function Home() {
           {/* 五角星 */}
           <Link
             href="/star"
-            className="group relative overflow-hidden rounded-lg bg-gray-800/50 backdrop-blur-sm border border-gray-700 hover:border-green-500 transition-all duration-300 p-6"
+            className="group relative overflow-hidden rounded-lg bg-gray-800/50 backdrop-blur-sm border border-gray-700 hover:border-yellow-500 transition-all duration-300 p-6"
           >
             <div className="mb-4">
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-4">
                 <span className="text-2xl">⭐️</span>
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">
-                五角星
+                五角星拖尾
               </h2>
               <p className="text-gray-400">
-                五角星效果
+                五角星粒子拖尾效果，使用 ShapeGeometry
               </p>
             </div>
-            <div className="text-green-400 group-hover:text-green-300 transition-colors">
-              查看对比 →
+            <div className="text-yellow-400 group-hover:text-yellow-300 transition-colors">
+              查看演示 →
+            </div>
+          </Link>
+
+          {/* 墨水拖尾 */}
+          <Link
+            href="/ink-trail"
+            className="group relative overflow-hidden rounded-lg bg-gray-800/50 backdrop-blur-sm border border-gray-700 hover:border-indigo-500 transition-all duration-300 p-6"
+          >
+            <div className="mb-4">
+              <div className="w-12 h-12 bg-indigo-500/20 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-2xl">🖋️</span>
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                墨水波纹
+              </h2>
+              <p className="text-gray-400">
+                使用 GLSL Shader 实现的墨水书法效果
+              </p>
+            </div>
+            <div className="text-indigo-400 group-hover:text-indigo-300 transition-colors">
+              查看演示 →
             </div>
           </Link>
         </div>
